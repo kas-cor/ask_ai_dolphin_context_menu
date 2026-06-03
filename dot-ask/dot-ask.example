@@ -11,9 +11,9 @@
 export ASK_MODEL="opencode/deepseek-v4-flash-free"
 
 ask() {
-  opencode run --model "$ASK_MODEL" "$*" | glow -
+  ~/.local/bin/ask-dolphin-run.sh "$*"
 }
 
 askr() {
-  opencode run --model "$ASK_MODEL" "$*"
+  GLOW_DISABLED=1 ~/.local/bin/ask-dolphin-run.sh "$*"
 }

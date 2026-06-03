@@ -72,7 +72,10 @@ echo ""
 echo -e "${BOLD}⏳ Streaming AI response...${NC}"
 echo ""
 
-if command -v glow &> /dev/null; then
+if [ "${GLOW_DISABLED:-0}" = "1" ]; then
+    # Raw mode (askr)
+    opencode run --model "$MODEL" "$PROMPT"
+elif command -v glow &> /dev/null; then
     opencode run --model "$MODEL" "$PROMPT" | glow -
 else
     echo -e "${YELLOW}glow not found — вывод без форматирования${NC}"
