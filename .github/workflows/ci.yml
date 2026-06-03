@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Shell syntax check
+        run: |
+          for f in src/ask-dolphin.sh src/ask-dolphin-run.sh install.sh uninstall.sh; do
+            echo "Checking $f..."
+            bash -n "$f"
+          done
+          echo "All shell scripts OK"
+
+      - name: Python syntax check
+        run: |
+          python3 -m py_compile src/ask-dolphin-dialog.py
+          echo "Python syntax OK"
