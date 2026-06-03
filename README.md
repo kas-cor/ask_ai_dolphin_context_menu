@@ -102,6 +102,54 @@ askr "Show me the answer"
 - `ask "..."` — streams response through `glow` (formatted Markdown)
 - `askr "..."` — raw output (no formatting)
 
+## Localization
+
+The project supports **English** and **Russian** (Русский). The language is auto-detected from your system locale and can be overridden.
+
+### What is localized
+
+| Component | English | Russian |
+|---|---|---|
+| Installer (`install.sh`) | All messages | Все сообщения |
+| Presets config | `ask-dolphin.cfg.example` | `ask-dolphin.cfg.ru_RU.example` |
+| PyQt5 dialog (title, labels, buttons) | ✅ | ✅ |
+| Runner header (Konsole) | ✅ | ✅ |
+| Service menu name (Dolphin) | 🤖 Ask AI | 🤖 Спросить AI |
+| Documentation | `README.md` | `README_ru.md` |
+
+### Locale detection priority
+
+1. **Installer:** CLI arg → `$LANG` → `en_EN`
+2. **Dialog / Runner:** `ASK_LOCALE` env var → `$LANG` → `en_EN`
+
+### How to change the language
+
+**During installation** — pass locale as argument:
+
+```bash
+./install.sh ru_RU          # force Russian
+curl ...install.sh | bash -s ru_RU   # via curl pipe
+```
+
+**After installation (dialog & runner)** — set `ASK_LOCALE` in `~/.ask_ai`:
+
+```bash
+export ASK_LOCALE="ru_RU"    # force Russian UI
+# or
+export ASK_LOCALE="en_EN"    # force English UI
+```
+
+Without `ASK_LOCALE`, the system `$LANG` variable is used (e.g., `LANG=ru_RU.UTF-8` → Russian). Russian is also detected from `ru_UA*`, `be_BY*`, and `uk_UA*` locales.
+
+### Config presets by locale
+
+During installation, the appropriate presets file is copied to `~/.config/ask-dolphin.cfg`:
+
+- **ru_RU** → Russian presets (`Опиши эти файлы`, `Найди ошибки…`, etc.)
+- **en_EN / other** → English presets (`Describe these files`, `Find bugs…`, etc.)
+
+The existing config is never overwritten on reinstall.
+
 ## Usage
 
 1. Select one or more files/folders in Dolphin
