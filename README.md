@@ -228,9 +228,14 @@ ask-ai-dolphin-context-menu/
 ├── uninstall.sh                # Uninstall script (works via curl too)
 ├── AGENTS.md                   # AI agents description
 ├── CHANGELOG.md                # Release history
+├── CONTRIBUTING.md             # Contribution guide
 ├── README.md                   # This file (English)
 └── README_ru.md                # Russian documentation
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidelines and conventional commits guide.
 
 ## License
 

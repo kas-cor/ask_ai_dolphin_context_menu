@@ -229,9 +229,14 @@ ask-ai-dolphin-context-menu/
 ├── uninstall.sh                # Скрипт удаления (работает и через curl)
 ├── AGENTS.md                   # Описание для AI-агентов
 ├── CHANGELOG.md                # История релизов
+├── CONTRIBUTING.md             # Руководство по внесению изменений
 ├── README.md                   # Документация на английском
 └── README_ru.md                # Этот файл
 ```
+
+## Участие в разработке
+
+См. [CONTRIBUTING.md](./CONTRIBUTING.md) — руководство по внесению изменений и conventional commits.
 
 ## Лицензия
 
