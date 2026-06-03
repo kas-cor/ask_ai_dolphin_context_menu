@@ -1,6 +1,6 @@
-# Модель AI по умолчанию для opencode.
-# Список доступных моделей: opencode models
-# Примеры:
+# Default AI model for opencode.
+# List available models: opencode models
+# Examples:
 #   opencode/deepseek-v4-flash-free   (free, default)
 #   opencode/deepseek-v4-flash
 #   opencode/claude-sonnet-4-6
@@ -10,16 +10,17 @@
 #   opencode/qwen3.5-plus
 export ASK_MODEL="opencode/deepseek-v4-flash-free"
 
-# ask / askr используют ask-dolphin-run.sh (из проекта Ask AI Dolphin Context Menu).
-# Этот скрипт добавляет контекст текущей директории (PWD) как файлы для AI.
-# Требуется предварительная установка: ./install.sh (см. README.md)
+# ask / askr use ask-dolphin-run.sh (from the Ask AI Dolphin Context Menu project).
+# This script adds the current directory (PWD) as file context for the AI.
+# Requires prior installation: ./install.sh (see README.md)
 #
-# Подключение: echo 'source ~/.ask_ai' >> ~/.bashrc
+# Enable by adding to your shell config:
+#   echo 'source ~/.ask_ai' >> ~/.bashrc
 ask() {
   ~/.local/bin/ask-dolphin-run.sh "$*"
 }
 
-# Без форматирования glow (raw)
+# Raw mode (no glow formatting)
 askr() {
   GLOW_DISABLED=1 ~/.local/bin/ask-dolphin-run.sh "$*"
 }

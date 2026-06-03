@@ -1,80 +1,80 @@
 #!/bin/bash
-# ask-dolphin.sh — вызывается из сервис-меню Dolphin
-# 1. PyQt5 диалог: кнопки пресетов + поле ввода
-# 2. Konsole с glow для стриминга ответа
+# ask-dolphin.sh — called from the Dolphin service menu
+# 1. PyQt5 dialog: preset buttons + custom input field
+# 2. Konsole with glow for streaming AI response
 #
-# Модель: задаётся через переменную окружения ASK_MODEL (export ASK_MODEL="opencode/...")
-# Заготовки запросов: настраиваются в ~/.config/ask-dolphin.cfg
+# Model: set via ASK_MODEL environment variable (export ASK_MODEL="opencode/...")
+# Preset queries: configured in ~/.config/ask-dolphin.cfg
 
-# --- Определяем директорию установки (поиск рядом со скриптом) ---
+# --- Determine install directory (look alongside this script) ---
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# --- Заготовки запросов (читаются из ~/.config/ask-dolphin.cfg) ---
+# --- Preset queries (read from ~/.config/ask-dolphin.cfg) ---
 ASK_PRESETS=()
 CONFIG_FILE="$HOME/.config/ask-dolphin.cfg"
 if [ -f "$CONFIG_FILE" ]; then
     while IFS= read -r line; do
-        # Пропускаем пустые строки и комментарии
+        # Skip empty lines and comments
         [[ -z "$line" || "$line" == \#* ]] && continue
         ASK_PRESETS+=("$line")
     done < "$CONFIG_FILE"
 fi
-# Fallback, если конфиг пуст или отсутствует
+# Fallback if config is empty or missing
 if [ ${#ASK_PRESETS[@]} -eq 0 ]; then
     ASK_PRESETS=(
-        "Опиши эти файлы"
-        "Найди баги в этих файлах"
-        "Оптимизируй этот код"
-        "Проверь качество кода"
-        "Сгенерируй документацию"
-        "Сделай рефакторинг"
-        "Напиши тесты для этих файлов"
+        "Describe these files"
+        "Find bugs in these files"
+        "Optimize this code"
+        "Review code quality"
+        "Generate documentation"
+        "Refactor this code"
+        "Write tests for these files"
     )
 fi
 
-# Фильтруем пустые аргументы (на случай если Dolphin передал пустую строку)
+# Filter out empty arguments (in case Dolphin passes an empty string)
 FILES=()
 for f in "$@"; do
     [ -n "$f" ] && FILES+=("$f")
 done
 
-# Если ничего не выделено — используем текущую директорию
+# If nothing is selected — use the current directory
 HAS_SELECTION=true
 if [ ${#FILES[@]} -eq 0 ]; then
     HAS_SELECTION=false
     FILES=("$PWD")
 fi
 
-# --- Собираем информацию о выбранных файлах ---
+# --- Collect file info ---
 if [ "$HAS_SELECTION" = true ]; then
-    FILE_LIST="Выбранные файлы:\\n"
+    FILE_LIST="Selected files:\\\\n"
 else
-    FILE_LIST="Текущая директория:\\n"
+    FILE_LIST="Current directory:\\\\n"
 fi
 for f in "${FILES[@]}"; do
     BASENAME=$(basename "$f")
     if [ -d "$f" ]; then
-        FILE_LIST+="📁 $BASENAME\\n"
+        FILE_LIST+="📁 $BASENAME\\\\n"
     else
         SIZE=$(du -h "$f" 2>/dev/null | cut -f1)
-        FILE_LIST+="📄 $BASENAME  ($SIZE)\\n"
+        FILE_LIST+="📄 $BASENAME  ($SIZE)\\\\n"
     fi
 done
 
-# --- PyQt5 диалог: кнопки пресетов + поле ввода ---
+# --- PyQt5 dialog: preset buttons + input field ---
 DIALOG="$SCRIPT_DIR/ask-dolphin-dialog.py"
 QUERY=$(echo -e "$FILE_LIST" | "$DIALOG" "${ASK_PRESETS[@]}")
 
-# Если нажали Cancel
+# If Cancel was pressed
 if [ $? -ne 0 ]; then
     exit 0
 fi
 
-# Если вопрос пустой — выходим
+# If query is empty — exit
 if [ -z "$QUERY" ]; then
     exit 0
 fi
 
-# --- Открываем Konsole с раннером (ASK_MODEL прокидывается из окружения) ---
+# --- Open Konsole with the runner (ASK_MODEL is passed from environment) ---
 RUNNER="$SCRIPT_DIR/ask-dolphin-run.sh"
 exec konsole -e "$RUNNER" "$QUERY" "${FILES[@]}"

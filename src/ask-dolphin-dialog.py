@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-ask-dolphin-dialog.py — PyQt5 диалог для выбора/ввода запроса AI.
-Используется из ask-dolphin.sh.
+ask-dolphin-dialog.py — PyQt5 dialog for selecting/entering an AI query.
+Used from ask-dolphin.sh.
 
-Аргументы командной строки: пресеты запросов.
-Stdin: строка с информацией о файлах (опционально).
-Stdout: выбранный запрос.
+CLI arguments: preset queries.
+Stdin: a string describing selected files (optional).
+Stdout: the selected/entered query.
 Exit code: 0 — OK, 1 — Cancel.
 """
 
@@ -18,7 +18,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 
 
-# --- QSS-стиль под KDE Breeze ---
+# --- QSS style for KDE Breeze ---
 STYLE = """
 QDialog {
     background-color: #eff0f1;
@@ -127,7 +127,7 @@ class AskDialog(QDialog):
         layout.setSpacing(12)
         layout.setContentsMargins(20, 20, 20, 20)
 
-        # --- Шапка ---
+        # --- Header ---
         header = QFrame()
         header.setObjectName("headerFrame")
         hdr_layout = QVBoxLayout(header)
@@ -146,7 +146,7 @@ class AskDialog(QDialog):
 
         layout.addWidget(header)
 
-        # --- Блок с файлами (если много текста) ---
+        # --- File info card (if multiple lines) ---
         if file_info and "\\n" in file_info:
             file_frame = QFrame()
             file_frame.setObjectName("fileFrame")
@@ -161,8 +161,8 @@ class AskDialog(QDialog):
 
             layout.addWidget(file_frame)
 
-        # --- Кнопки пресетов ---
-        presets_label = QLabel("Быстрые запросы:")
+        # --- Preset buttons ---
+        presets_label = QLabel("Quick queries:")
         presets_label.setStyleSheet(
             "color: #62686e; font-size: 11px; font-weight: bold; "
             "padding: 0; margin: 0;"
@@ -176,8 +176,8 @@ class AskDialog(QDialog):
             btn.clicked.connect(lambda checked, p=preset: self.on_preset(p))
             layout.addWidget(btn)
 
-        # --- Поле ввода ---
-        input_label = QLabel("Или введите свой запрос:")
+        # --- Custom input field ---
+        input_label = QLabel("Or type your query:")
         input_label.setStyleSheet(
             "color: #62686e; font-size: 11px; font-weight: bold; "
             "padding: 0; margin-top: 4px;"
@@ -185,15 +185,15 @@ class AskDialog(QDialog):
         layout.addWidget(input_label)
 
         self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Ваш вопрос…")
+        self.input_field.setPlaceholderText("Your question…")
         layout.addWidget(self.input_field)
 
-        # --- Кнопки OK / Cancel ---
+        # --- OK / Cancel buttons ---
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         ok_btn = buttons.button(QDialogButtonBox.Ok)
         ok_btn.setObjectName("okButton")
-        ok_btn.setText("Отправить")
-        buttons.button(QDialogButtonBox.Cancel).setText("Отмена")
+        ok_btn.setText("Send")
+        buttons.button(QDialogButtonBox.Cancel).setText("Cancel")
         buttons.accepted.connect(self.on_ok)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -209,7 +209,7 @@ class AskDialog(QDialog):
             self.accept()
         else:
             self.input_field.setFocus()
-            self.input_field.setPlaceholderText("Введите запрос!")
+            self.input_field.setPlaceholderText("Type your query!")
 
 
 def main():
@@ -219,7 +219,7 @@ def main():
     app = QApplication(sys.argv)
     app.setStyle("Breeze")
 
-    # Шрифт по умолчанию
+    # Default font
     font = QFont("Noto Sans", 10)
     app.setFont(font)
 

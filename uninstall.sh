@@ -1,8 +1,8 @@
 #!/bin/bash
-# uninstall.sh — удаление Ask AI из контекстного меню Dolphin
+# uninstall.sh — Remove Ask AI from the Dolphin context menu
 #
-# Использование:
-#   ./uninstall.sh                — из клонированного репозитория
+# Usage:
+#   ./uninstall.sh                — from a cloned repository
 #   curl -s https://raw.githubusercontent.com/kas-cor/ask_ai_dolphin_context_menu/main/uninstall.sh | bash
 
 set -euo pipefail
@@ -12,14 +12,14 @@ SERVICEMENU_DIR="$HOME/.local/share/kio/servicemenus"
 
 echo "🗑️  Uninstalling Ask AI Dolphin context menu..."
 
-# --- Удаляем скрипты ---
+# --- Remove scripts ---
 for f in ask-dolphin.sh ask-dolphin-run.sh ask-dolphin-dialog.py; do
     if [ -f "$BIN_DIR/$f" ]; then
         rm -v "$BIN_DIR/$f"
     fi
 done
 
-# --- Удаляем сервис-меню ---
+# --- Remove service menu ---
 if [ -f "$SERVICEMENU_DIR/ask-dolphin.desktop" ]; then
     rm -v "$SERVICEMENU_DIR/ask-dolphin.desktop"
 fi

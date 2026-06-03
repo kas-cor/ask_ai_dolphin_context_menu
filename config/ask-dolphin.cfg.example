@@ -1,12 +1,12 @@
-# Пресеты для Ask AI — один запрос на строку.
-# Строки, начинающиеся с #, игнорируются.
-# Пустые строки тоже игнорируются.
-# Можно менять, добавлять или удалять строки.
+# Ask AI presets — one query per line.
+# Lines starting with # are ignored.
+# Blank lines are also ignored.
+# Feel free to change, add, or remove lines.
 
-Опиши эти файлы
-Найди баги в этих файлах
-Оптимизируй этот код
-Проверь качество кода
-Сгенерируй документацию
-Сделай рефакторинг
-Напиши тесты для этих файлов
+Describe these files
+Find bugs in these files
+Optimize this code
+Review code quality
+Generate documentation
+Refactor this code
+Write tests for these files

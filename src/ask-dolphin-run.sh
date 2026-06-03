@@ -1,15 +1,15 @@
 #!/bin/bash
-# ask-dolphin-run.sh — универсальный раннер для запуска opencode в Konsole
-# Принимает вопрос как $1, файлы как $2+
-# Показывает шапку и стримит ответ через glow
+# ask-dolphin-run.sh — universal runner for launching opencode in Konsole
+# Takes the query as $1, files as $2+
+# Shows a header and streams the response through glow
 
-# Чистый выход по Ctrl+C (без «Сбой программы» от Konsole)
+# Clean exit on Ctrl+C (avoids Konsole's "Program error" message)
 trap 'echo ""; exit 0' INT
 
 QUERY="$1"
 shift
 
-# Фильтруем пустые аргументы
+# Filter out empty arguments
 FILES=()
 for f in "$@"; do
     [ -n "$f" ] && FILES+=("$f")
@@ -19,12 +19,12 @@ if [ -z "$QUERY" ]; then
     QUERY="Explain these files"
 fi
 
-# Если файлы не переданы — используем текущую директорию
+# If no files provided — use the current directory
 if [ ${#FILES[@]} -eq 0 ]; then
     FILES=("$PWD")
 fi
 
-# --- Цвета ---
+# --- Colors ---
 BOLD='\033[1m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
@@ -32,7 +32,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-# --- Шапка ---
+# --- Header ---
 echo -e "${BOLD}${BLUE}╔══════════════════════════════════════════╗${NC}"
 echo -e "${BOLD}${BLUE}║      🤖  Ask AI about selected file(s)   ║${NC}"
 echo -e "${BOLD}${BLUE}╚══════════════════════════════════════════╝${NC}"
@@ -51,24 +51,24 @@ echo -e "${BOLD}Your question:${NC}"
 echo -e "  ${YELLOW}$QUERY${NC}"
 echo ""
 
-# --- Формируем промпт ---
+# --- Build the prompt ---
 PROMPT="I have these selected files/directories:
 $(printf '%s\n' "${FILES[@]}")
 
 My question about them: $QUERY"
 
-# --- Проверяем opencode ---
+# --- Check opencode ---
 if ! command -v opencode &> /dev/null; then
     echo -e "${BOLD}Error: opencode not found in PATH${NC}"
     exit 1
 fi
 
-# --- Определяем модель (из окружения или по умолчанию) ---
+# --- Determine model (from environment or default) ---
 MODEL="${ASK_MODEL:-opencode/deepseek-v4-flash-free}"
 echo -e "${BOLD}Model:${NC} ${CYAN}${MODEL}${NC}"
 echo ""
 
-# --- Стримим ---
+# --- Stream ---
 echo -e "${BOLD}⏳ Streaming AI response...${NC}"
 echo ""
 
@@ -78,7 +78,7 @@ if [ "${GLOW_DISABLED:-0}" = "1" ]; then
 elif command -v glow &> /dev/null; then
     opencode run --model "$MODEL" "$PROMPT" | glow -
 else
-    echo -e "${YELLOW}glow not found — вывод без форматирования${NC}"
+    echo -e "${YELLOW}glow not found — output without formatting${NC}"
     opencode run --model "$MODEL" "$PROMPT"
 fi
 
