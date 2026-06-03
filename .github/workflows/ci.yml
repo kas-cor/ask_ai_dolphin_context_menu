@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Shell syntax check
+        run: |
+          bash -n src/ask-ai-dolphin.sh
+          bash -n src/ask-ai-dolphin-run.sh
+          bash -n install.sh
+          bash -n uninstall.sh
+          echo "All shell scripts OK"
+
+      - name: Python syntax check
+        run: |
+          python3 -m py_compile src/ask-ai-dolphin-dialog.py
+          echo "Python syntax OK"
+
+      - name: Locale files validation
+        run: |
+          python3 .github/scripts/validate-locales.py
+          echo "Locale files OK"
+
+      - name: Install PyQt5 for Qt tests
+        run: sudo apt-get install -y python3-pyqt5
+
+      - name: Qt setFamilies() compatibility test
+        run: |
+          python3 .github/scripts/test-qt-compat.py
+          echo "Qt compat OK"
+
+      - name: ASK_AI_THEME style selection test
+        run: |
+          python3 .github/scripts/test-ask-theme.py
+          echo "ASK_AI_THEME OK"

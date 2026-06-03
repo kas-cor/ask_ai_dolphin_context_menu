@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=all/all;
+Actions=askSelectedFiles;
+X-KDE-Priority=TopLevel
+X-KDE-ShowWithoutSelection=true
+
+[Desktop Action askSelectedFiles]
+Name=🤖 Ask AI
+Name[ru]=🤖 Спросить AI
+Icon=utilities-terminal
+Exec=@HOME@/.local/bin/ask-ai-dolphin.sh %F
