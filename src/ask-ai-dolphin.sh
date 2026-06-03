@@ -76,11 +76,9 @@ fi
 
 # --- Collect file info ---
 if [ "$HAS_SELECTION" = true ]; then
-    FILE_LIST="${LBL_SELECTED_FILES}\
-"
+    FILE_LIST="${LBL_SELECTED_FILES}\n"
 else
-    FILE_LIST="${LBL_CURRENT_DIR}\
-"
+    FILE_LIST="${LBL_CURRENT_DIR}\n"
 fi
 for f in "${FILES[@]}"; do
     BASENAME=$(basename "$f")
@@ -88,7 +86,7 @@ for f in "${FILES[@]}"; do
         FILE_LIST+="📁 $BASENAME\n"
     else
         SIZE=$(du -h "$f" 2>/dev/null | cut -f1)
-        FILE_LIST+="📄 $BASENAME  ($SIZE)\\n"
+        FILE_LIST+="📄 $BASENAME  ($SIZE)\n"
     fi
 done
 
