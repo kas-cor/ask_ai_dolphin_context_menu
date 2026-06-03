@@ -29,11 +29,11 @@ if [ -z "$SCRIPT_DIR" ] || [ ! -f "$SCRIPT_DIR/src/ask-dolphin.sh" ]; then
     fi
 
     TMP_DIR="$(mktemp -d)"
-    trap 'rm -rf "$TMP_DIR"' EXIT
-
     curl -sfL "$GITHUB_TAR" | tar xz -C "$TMP_DIR" --strip-components=1
-
-    exec bash "$TMP_DIR/install.sh"
+    bash "$TMP_DIR/install.sh"
+    rc=$?
+    rm -rf "$TMP_DIR"
+    exit "$rc"
 fi
 
 # --- Локальный режим: используем файлы из репозитория ---
