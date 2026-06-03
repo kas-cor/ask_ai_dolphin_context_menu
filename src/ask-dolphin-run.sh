@@ -15,8 +15,46 @@ for f in "$@"; do
     [ -n "$f" ] && FILES+=("$f")
 done
 
+# --- Locale detection (same logic as dialog + install) ---
+# Priority: ASK_LOCALE env → $LANG → en_EN
+DETECTED_LOCALE="en_EN"
+case "${ASK_LOCALE:-}" in
+    ru_RU|ru) DETECTED_LOCALE="ru_RU" ;;
+    en_EN|en) DETECTED_LOCALE="en_EN" ;;
+    *)
+        case "${LANG:-}" in
+            ru_RU*|ru_UA*|be_BY*|uk_UA*) DETECTED_LOCALE="ru_RU" ;;
+        esac
+        ;;
+esac
+LOCALE="$DETECTED_LOCALE"
+
+# --- Localized strings ---
+if [ "$LOCALE" = "ru_RU" ]; then
+    HDR_TITLE="🤖  Спросить AI о выбранных файлах"
+    LBL_FILES="Выбранные файлы:"
+    LBL_QUESTION="Ваш вопрос:"
+    LBL_MODEL="Модель:"
+    LBL_STREAMING="⏳ Получение ответа AI..."
+    LBL_GLOW_MISSING="glow не найден — вывод без форматирования"
+    LBL_ERR_OPENCODE="Ошибка: opencode не найден в PATH"
+    LBL_DONE="✅ Готово. Нажмите Ctrl+C или Enter чтобы закрыть."
+    FALLBACK_QUERY="Опиши эти файлы"
+else
+    HDR_TITLE="🤖  Ask AI about selected file(s)"
+    LBL_FILES="Selected files:"
+    LBL_QUESTION="Your question:"
+    LBL_MODEL="Model:"
+    LBL_STREAMING="⏳ Streaming AI response..."
+    LBL_GLOW_MISSING="glow not found — output without formatting"
+    LBL_ERR_OPENCODE="Error: opencode not found in PATH"
+    LBL_DONE="✅ Done. Press Ctrl+C or Enter to close."
+    FALLBACK_QUERY="Explain these files"
+fi
+
+# --- Defaults ---
 if [ -z "$QUERY" ]; then
-    QUERY="Explain these files"
+    QUERY="$FALLBACK_QUERY"
 fi
 
 # If no files provided — use the current directory
@@ -34,10 +72,10 @@ NC='\033[0m'
 
 # --- Header ---
 echo -e "${BOLD}${BLUE}╔══════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}${BLUE}║      🤖  Ask AI about selected file(s)   ║${NC}"
+echo -e "${BOLD}${BLUE}║      ${HDR_TITLE}   ║${NC}"
 echo -e "${BOLD}${BLUE}╚══════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${BOLD}${YELLOW}Selected files:${NC}"
+echo -e "${BOLD}${YELLOW}${LBL_FILES}${NC}"
 for f in "${FILES[@]}"; do
     if [ -d "$f" ]; then
         echo -e "  ${CYAN}📁 $f${NC}"
@@ -47,7 +85,7 @@ for f in "${FILES[@]}"; do
     fi
 done
 echo ""
-echo -e "${BOLD}Your question:${NC}"
+echo -e "${BOLD}${LBL_QUESTION}${NC}"
 echo -e "  ${YELLOW}$QUERY${NC}"
 echo ""
 
@@ -59,17 +97,17 @@ My question about them: $QUERY"
 
 # --- Check opencode ---
 if ! command -v opencode &> /dev/null; then
-    echo -e "${BOLD}Error: opencode not found in PATH${NC}"
+    echo -e "${BOLD}${LBL_ERR_OPENCODE}${NC}"
     exit 1
 fi
 
 # --- Determine model (from environment or default) ---
 MODEL="${ASK_MODEL:-opencode/deepseek-v4-flash-free}"
-echo -e "${BOLD}Model:${NC} ${CYAN}${MODEL}${NC}"
+echo -e "${BOLD}${LBL_MODEL}${NC} ${CYAN}${MODEL}${NC}"
 echo ""
 
 # --- Stream ---
-echo -e "${BOLD}⏳ Streaming AI response...${NC}"
+echo -e "${BOLD}${LBL_STREAMING}${NC}"
 echo ""
 
 if [ "${GLOW_DISABLED:-0}" = "1" ]; then
@@ -78,11 +116,11 @@ if [ "${GLOW_DISABLED:-0}" = "1" ]; then
 elif command -v glow &> /dev/null; then
     opencode run --model "$MODEL" "$PROMPT" | glow -
 else
-    echo -e "${YELLOW}glow not found — output without formatting${NC}"
+    echo -e "${YELLOW}${LBL_GLOW_MISSING}${NC}"
     opencode run --model "$MODEL" "$PROMPT"
 fi
 
 echo ""
-echo -e "${BOLD}${GREEN}✅ Done. Press Ctrl+C or Enter to close.${NC}"
+echo -e "${BOLD}${GREEN}${LBL_DONE}${NC}"
 echo -n ""
 read -r 2>/dev/null || true
