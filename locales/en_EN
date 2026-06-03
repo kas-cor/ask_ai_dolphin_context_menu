@@ -1,0 +1,54 @@
+# =============================================================================
+# English locale for Ask AI Dolphin Context Menu
+# =============================================================================
+# This file is sourced by shell scripts and parsed by the Python dialog.
+# Format: KEY="value"
+# =============================================================================
+
+# --- installer messages (install_) ---
+install_downloading="📦 Downloading project from GitHub..."
+install_curl_required="❌ curl is required. Install: sudo pacman -S curl"
+install_checking_deps="🔍 Checking dependencies..."
+install_missing_deps="❌ Missing required dependencies:"
+install_install_them="  Install them with:"
+install_opencode_url="    # opencode: see https://opencode.ai"
+install_glow_warning="  ⚠️  glow not found — Markdown formatting will not be available"
+install_glow_install="       Install: sudo pacman -S glow"
+install_installing="📦 Installing Ask AI Dolphin context menu..."
+install_copying_scripts="  → Copying scripts to %s"
+install_installing_servicemenu="  → Installing service menu to %s"
+install_creating_config="  → Creating default config at %s"
+install_config_exists="  → Config already exists at %s (keeping)"
+install_creating_ask_ai="  → Creating ~/.ask_ai with terminal functions (ask / askr)"
+install_added_source="  → Added 'source ~/.ask_ai' to %s"
+install_no_shell_config="  ⚠️  Could not detect shell config file."
+install_add_manually="       Add this line manually:"
+install_add_manually_cmd="         echo 'source ~/.ask_ai' >> ~/.bashrc"
+install_install_complete="✅ Installation complete!"
+install_restart_dolphin="To apply, restart Dolphin: Ctrl+Shift+R"
+install_restart_terminal="Or from terminal: killall dolphin && dolphin --new-window &"
+install_optional="📝 Optional:"
+install_edit_presets="  - Edit presets:  nano %s"
+install_set_model="  - Set model:     nano ~/.ask_ai  (change ASK_MODEL)"
+
+# --- runner messages (runner_) ---
+runner_hdr_title="🤖  Ask AI about selected file(s)"
+runner_lbl_files="Selected files:"
+runner_lbl_question="Your question:"
+runner_lbl_model="Model:"
+runner_lbl_streaming="⏳ Streaming AI response..."
+runner_lbl_glow_missing="glow not found — output without formatting"
+runner_lbl_err_opencode="Error: opencode not found in PATH"
+runner_lbl_done="✅ Done. Press Ctrl+C or Enter to close."
+runner_fallback_query="Explain these files"
+
+# --- dialog messages (dialog_) ---
+dialog_win_title="🤖  Ask AI"
+dialog_hdr_title="🤖  Ask AI"
+dialog_presets_label="Quick queries:"
+dialog_input_label="Or type your query:"
+dialog_input_placeholder="Your question…"
+dialog_ok_text="Send"
+dialog_cancel_text="Cancel"
+dialog_empty_placeholder="Type your query!"
+dialog_fallback_preset="Explain these files"

@@ -44,7 +44,38 @@ def detect_locale():
     return "en_EN"
 
 
+def load_locale(locale):
+    """Load locale strings from file. Returns dict with dialog_* keys."""
+    strings = {}
+    # Look for locale file next to the script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    locale_path = os.path.join(script_dir, "locales", locale)
+
+    if os.path.isfile(locale_path):
+        with open(locale_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                # Skip blanks and comments
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    key, _, value = line.partition("=")
+                    key = key.strip()
+                    value = value.strip()
+                    # Strip surrounding quotes
+                    if len(value) >= 2 and value[0] == value[-1] and value[0] in ('"', "'"):
+                        value = value[1:-1]
+                    strings[key] = value
+    return strings
+
+
 LOCALE = detect_locale()
+LOCALE_STRINGS = load_locale(LOCALE)
+
+
+def _(key, default=""):
+    """Get localized string by key, fallback to default."""
+    return LOCALE_STRINGS.get(key, default)
 
 
 # --- QSS style for KDE Breeze ---
@@ -152,23 +183,14 @@ class AskDialog(QDialog):
         self.setModal(True)
         self.setStyleSheet(STYLE)
 
-        # --- Localized strings ---
-        if locale == "ru_RU":
-            win_title = "🤖  Спросить AI"
-            hdr_title = "🤖  Спросить AI"
-            presets_label_text = "Быстрые запросы:"
-            input_label_text = "Или введите запрос:"
-            input_placeholder = "Ваш вопрос…"
-            ok_text = "Отправить"
-            cancel_text = "Отмена"
-        else:
-            win_title = "🤖  Ask AI"
-            hdr_title = "🤖  Ask AI"
-            presets_label_text = "Quick queries:"
-            input_label_text = "Or type your query:"
-            input_placeholder = "Your question…"
-            ok_text = "Send"
-            cancel_text = "Cancel"
+        # --- Localized strings (from locale file, fallback to inline) ---
+        win_title = _("dialog_win_title", "🤖  Ask AI")
+        hdr_title = _("dialog_hdr_title", "🤖  Ask AI")
+        presets_label_text = _("dialog_presets_label", "Quick queries:")
+        input_label_text = _("dialog_input_label", "Or type your query:")
+        input_placeholder = _("dialog_input_placeholder", "Your question…")
+        ok_text = _("dialog_ok_text", "Send")
+        cancel_text = _("dialog_cancel_text", "Cancel")
 
         self.setWindowTitle(win_title)
 
@@ -258,17 +280,11 @@ class AskDialog(QDialog):
             self.accept()
         else:
             self.input_field.setFocus()
-            if self.locale == "ru_RU":
-                self.input_field.setPlaceholderText("Введите запрос!")
-            else:
-                self.input_field.setPlaceholderText("Type your query!")
+            self.input_field.setPlaceholderText(_("dialog_empty_placeholder", "Type your query!"))
 
 
 def main():
-    if LOCALE == "ru_RU":
-        fallback_preset = "Опиши эти файлы"
-    else:
-        fallback_preset = "Explain these files"
+    fallback_preset = _("dialog_fallback_preset", "Explain these files")
     presets = sys.argv[1:] if len(sys.argv) > 1 else [fallback_preset]
     file_info = sys.stdin.read().strip() if not sys.stdin.isatty() else ""
 

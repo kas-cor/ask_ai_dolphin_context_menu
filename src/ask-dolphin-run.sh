@@ -29,28 +29,21 @@ case "${ASK_LOCALE:-}" in
 esac
 LOCALE="$DETECTED_LOCALE"
 
-# --- Localized strings ---
-if [ "$LOCALE" = "ru_RU" ]; then
-    HDR_TITLE="🤖  Спросить AI о выбранных файлах"
-    LBL_FILES="Выбранные файлы:"
-    LBL_QUESTION="Ваш вопрос:"
-    LBL_MODEL="Модель:"
-    LBL_STREAMING="⏳ Получение ответа AI..."
-    LBL_GLOW_MISSING="glow не найден — вывод без форматирования"
-    LBL_ERR_OPENCODE="Ошибка: opencode не найден в PATH"
-    LBL_DONE="✅ Готово. Нажмите Ctrl+C или Enter чтобы закрыть."
-    FALLBACK_QUERY="Опиши эти файлы"
-else
-    HDR_TITLE="🤖  Ask AI about selected file(s)"
-    LBL_FILES="Selected files:"
-    LBL_QUESTION="Your question:"
-    LBL_MODEL="Model:"
-    LBL_STREAMING="⏳ Streaming AI response..."
-    LBL_GLOW_MISSING="glow not found — output without formatting"
-    LBL_ERR_OPENCODE="Error: opencode not found in PATH"
-    LBL_DONE="✅ Done. Press Ctrl+C or Enter to close."
-    FALLBACK_QUERY="Explain these files"
-fi
+# Load locale file (fallback to inline defaults)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOCALE_FILE="$SCRIPT_DIR/locales/$LOCALE"
+[ -f "$LOCALE_FILE" ] && source "$LOCALE_FILE"
+
+# --- Localized strings (from locale file or inline defaults) ---
+HDR_TITLE="${runner_hdr_title:-🤖  Ask AI about selected file(s)}"
+LBL_FILES="${runner_lbl_files:-Selected files:}"
+LBL_QUESTION="${runner_lbl_question:-Your question:}"
+LBL_MODEL="${runner_lbl_model:-Model:}"
+LBL_STREAMING="${runner_lbl_streaming:-⏳ Streaming AI response...}"
+LBL_GLOW_MISSING="${runner_lbl_glow_missing:-glow not found -- output without formatting}"
+LBL_ERR_OPENCODE="${runner_lbl_err_opencode:-Error: opencode not found in PATH}"
+LBL_DONE="${runner_lbl_done:-✅ Done. Press Ctrl+C or Enter to close.}"
+FALLBACK_QUERY="${runner_fallback_query:-Explain these files}"
 
 # --- Defaults ---
 if [ -z "$QUERY" ]; then
