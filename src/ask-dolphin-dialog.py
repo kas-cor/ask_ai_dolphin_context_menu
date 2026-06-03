@@ -23,7 +23,18 @@ from PyQt5.QtGui import QIcon, QFont
 
 # --- Theme detection ---
 def detect_dark_theme(app):
-    """Detect if the OS theme is dark using QPalette."""
+    """Detect if the OS theme is dark.
+
+    Priority:
+      1. ASK_THEME env var ("dark" or "light")
+      2. Auto-detect from QPalette.Window lightness
+    """
+    theme_override = os.environ.get("ASK_THEME", "").strip().lower()
+    if theme_override == "dark":
+        return True
+    if theme_override == "light":
+        return False
+
     palette = app.palette()
     bg = palette.color(palette.Window)
     return bg.lightness() < 128
