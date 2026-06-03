@@ -17,7 +17,7 @@ GITHUB_RAW="https://raw.githubusercontent.com/$REPO/$BRANCH"
 GITHUB_TAR="https://github.com/$REPO/archive/$BRANCH.tar.gz"
 
 # --- Определяем режим: локальный или curl pipe ---
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "")"
+SCRIPT_DIR="$(cd "$(dirname "$0")" 2>/dev/null && pwd || echo "")"
 
 if [ -z "$SCRIPT_DIR" ] || [ ! -f "$SCRIPT_DIR/src/ask-dolphin.sh" ]; then
     # --- Режим curl pipe: скачиваем проект во временную папку ---
