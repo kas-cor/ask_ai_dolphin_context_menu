@@ -169,6 +169,40 @@ During installation, the appropriate presets file is copied to `~/.config/ask-do
 
 The existing config is never overwritten on reinstall.
 
+### Contributing a new locale
+
+Want to add support for your language? Here's how:
+
+1. **Create a locale file** — copy `locales/en_EN` to `locales/xx_XX` (where `xx_XX` is your locale code, e.g., `de_DE`, `fr_FR`, `pl_PL`) and translate all values:
+
+```bash
+cp locales/en_EN locales/de_DE
+# Edit locales/de_DE — translate everything after the =
+```
+
+2. **Install locale detection** — add your locale to the case statement in all 3 scripts. Look for the existing `ru_RU*|ru_UA*|be_BY*|uk_UA*` pattern and add your own:
+
+   - `install.sh` — line `ru_RU*|ru_UA*|be_BY*|uk_UA*) DETECTED_LOCALE="ru_RU" ;:`
+   - `src/ask-dolphin.sh` — same pattern
+   - `src/ask-dolphin-run.sh` — same pattern
+   - `src/ask-dolphin-dialog.py` — in `detect_locale()` function
+
+3. **Create a preset config** (optional) — create `config/ask-dolphin.cfg.xx_XX.example` with translated preset queries
+
+4. **Update install.sh** — add locale-based config selection logic for your locale (see existing `ru_RU` block)
+
+5. **Update the .desktop file** — add `Name[xx]=Your Translation` to `servicemenu/ask-dolphin.desktop`
+
+6. **Document your locale** — add `README_xx_XX.md` (or update the existing documentation table)
+
+7. **Submit a pull request** with all the changes!
+
+**Key prefixes** for reference:
+- `install_*` — installer messages (`install.sh`)
+- `runner_*` — runner labels (`ask-dolphin-run.sh`)
+- `dialog_*` — dialog UI strings (`ask-dolphin-dialog.py`)
+- `sh_*` — shell entry point headers (`ask-dolphin.sh`)
+
 ## Usage
 
 1. Select one or more files/folders in Dolphin
