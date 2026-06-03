@@ -211,10 +211,16 @@ sed "s|@HOME@|$HOME|g" "$PROJECT_DIR/servicemenu/ask-dolphin.desktop" \
     > "$SERVICEMENU_DIR/ask-dolphin.desktop"
 chmod +x "$SERVICEMENU_DIR/ask-dolphin.desktop"
 
-# --- Copy example config (don't overwrite existing) ---
+# --- Copy example config (choose by locale, don't overwrite existing) ---
+CONFIG_SRC="ask-dolphin.cfg.example"
+if [ "$LOCALE" = "ru_RU" ]; then
+    RU_CONFIG="$PROJECT_DIR/config/ask-dolphin.cfg.ru_RU.example"
+    [ -f "$RU_CONFIG" ] && CONFIG_SRC="ask-dolphin.cfg.ru_RU.example"
+fi
+
 if [ ! -f "$CONFIG_DIR/ask-dolphin.cfg" ]; then
     e creating_config "$CONFIG_DIR/ask-dolphin.cfg"
-    cp "$PROJECT_DIR/config/ask-dolphin.cfg.example" "$CONFIG_DIR/ask-dolphin.cfg"
+    cp "$PROJECT_DIR/config/$CONFIG_SRC" "$CONFIG_DIR/ask-dolphin.cfg"
 else
     e config_exists "$CONFIG_DIR/ask-dolphin.cfg"
 fi
