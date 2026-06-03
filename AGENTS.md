@@ -53,6 +53,7 @@ Konsole window — user sees formatted Markdown output
 | `ASK_MODEL` | `opencode/deepseek-v4-flash-free` | AI model for opencode |
 | `GLOW_DISABLED` | unset | Set to `1` for raw output without glow formatting |
 | `ASK_LOCALE` | auto-detect | Force locale for all UI components (`ru_RU` / `ru` or `en_EN` / `en`) |
+| `ASK_THEME` | auto-detect | Force UI theme for dialog and runner (`dark` or `light`) |
 
 ## Data Flow
 
