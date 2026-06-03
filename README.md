@@ -113,6 +113,18 @@ ask_ai_dolphin_context_menu/
 └── README.md                   # Этот файл
 ```
 
+## Публикация на GitHub
+
+```bash
+# 1. Создайте пустой репозиторий на github.com (без README, без .gitignore)
+# 2. Замените URL на свой и выполните:
+
+git remote add origin https://github.com/ваш-username/ask_ai_dolphin_context_menu.git
+git push -u origin main
+```
+
+После публикации обновите ссылку для клонирования в разделе **Установка**.
+
 ## Лицензия
 
 MIT
