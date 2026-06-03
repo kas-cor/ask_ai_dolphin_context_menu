@@ -14,10 +14,10 @@ jobs:
 
       - name: Shell syntax check
         run: |
-          for f in src/ask-dolphin.sh src/ask-dolphin-run.sh install.sh uninstall.sh; do
-            echo "Checking $f..."
-            bash -n "$f"
-          done
+          bash -n src/ask-dolphin.sh
+          bash -n src/ask-dolphin-run.sh
+          bash -n install.sh
+          bash -n uninstall.sh
           echo "All shell scripts OK"
 
       - name: Python syntax check
