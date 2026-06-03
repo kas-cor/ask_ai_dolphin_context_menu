@@ -56,31 +56,60 @@ if [ ${#FILES[@]} -eq 0 ]; then
     FILES=("$PWD")
 fi
 
+# --- Theme detection ---
+# Priority: ASK_THEME env → COLORFGBG → light (default)
+DETECTED_THEME="light"
+# Case-insensitive comparison using ${var,,} (bash 4+)
+ask_theme_lower="${ASK_THEME,,}"
+case "${ask_theme_lower:-}" in
+    dark|d) DETECTED_THEME="dark" ;;
+    light|l) DETECTED_THEME="light" ;;
+    *)
+        # COLORFGBG is set by Konsole: "fg;bg" color indices
+        # 0=black, 7=white, 15=white(bright) — dark when bg is 0, 4, or 8
+        # Extract bg value (everything after ';')
+        colorfgbg_bg="${COLORFGBG#*;}"
+        case "$colorfgbg_bg" in
+            0|4|8) DETECTED_THEME="dark" ;;
+        esac
+        ;;
+esac
+
 # --- Colors ---
-BOLD='\033[1m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 NC='\033[0m'
+BOLD='\033[1m'
+
+if [ "$DETECTED_THEME" = "dark" ]; then
+    # Dark theme — lighter colors visible on dark background
+    HDR_BLUE='\033[1;34m'
+    FILE_CYAN='\033[1;36m'
+    FILE_GREEN='\033[1;32m'
+    LABEL_YELLOW='\033[1;33m'
+else
+    # Light theme — normal colors visible on light background
+    HDR_BLUE='\033[0;34m'
+    FILE_CYAN='\033[0;36m'
+    FILE_GREEN='\033[0;32m'
+    LABEL_YELLOW='\033[1;33m'
+fi
 
 # --- Header ---
-echo -e "${BOLD}${BLUE}╔══════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}${BLUE}║      ${HDR_TITLE}   ║${NC}"
-echo -e "${BOLD}${BLUE}╚══════════════════════════════════════════╝${NC}"
+echo -e "${BOLD}${HDR_BLUE}╔══════════════════════════════════════════╗${NC}"
+echo -e "${BOLD}${HDR_BLUE}║      ${HDR_TITLE}   ║${NC}"
+echo -e "${BOLD}${HDR_BLUE}╚══════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${BOLD}${YELLOW}${LBL_FILES}${NC}"
+echo -e "${BOLD}${LABEL_YELLOW}${LBL_FILES}${NC}"
 for f in "${FILES[@]}"; do
     if [ -d "$f" ]; then
-        echo -e "  ${CYAN}📁 $f${NC}"
+        echo -e "  ${FILE_CYAN}📁 $f${NC}"
     else
         SIZE=$(du -h "$f" 2>/dev/null | cut -f1)
-        echo -e "  ${GREEN}📄 $f${NC}  ${BOLD}(${SIZE})${NC}"
+        echo -e "  ${FILE_GREEN}📄 $f${NC}  ${BOLD}(${SIZE})${NC}"
     fi
 done
 echo ""
 echo -e "${BOLD}${LBL_QUESTION}${NC}"
-echo -e "  ${YELLOW}$QUERY${NC}"
+echo -e "  ${LABEL_YELLOW}$QUERY${NC}"
 echo ""
 
 # --- Build the prompt ---
@@ -97,7 +126,7 @@ fi
 
 # --- Determine model (from environment or default) ---
 MODEL="${ASK_MODEL:-opencode/deepseek-v4-flash-free}"
-echo -e "${BOLD}${LBL_MODEL}${NC} ${CYAN}${MODEL}${NC}"
+echo -e "${BOLD}${LBL_MODEL}${NC} ${FILE_CYAN}${MODEL}${NC}"
 echo ""
 
 # --- Stream ---
@@ -110,11 +139,11 @@ if [ "${GLOW_DISABLED:-0}" = "1" ]; then
 elif command -v glow &> /dev/null; then
     opencode run --model "$MODEL" "$PROMPT" | glow -
 else
-    echo -e "${YELLOW}${LBL_GLOW_MISSING}${NC}"
+    echo -e "${LABEL_YELLOW}${LBL_GLOW_MISSING}${NC}"
     opencode run --model "$MODEL" "$PROMPT"
 fi
 
 echo ""
-echo -e "${BOLD}${GREEN}${LBL_DONE}${NC}"
+echo -e "${BOLD}${FILE_GREEN}${LBL_DONE}${NC}"
 echo -n ""
 read -r 2>/dev/null || true
