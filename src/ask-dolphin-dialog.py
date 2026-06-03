@@ -47,9 +47,14 @@ def detect_locale():
 def load_locale(locale):
     """Load locale strings from file. Returns dict with dialog_* keys."""
     strings = {}
-    # Look for locale file next to the script
     script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Check locale file next to the script (installed path: ~/.local/bin/locales/xx)
     locale_path = os.path.join(script_dir, "locales", locale)
+
+    # Fallback: project root (for running from source: src/../locales/xx)
+    if not os.path.isfile(locale_path):
+        locale_path = os.path.join(os.path.dirname(script_dir), "locales", locale)
 
     if os.path.isfile(locale_path):
         with open(locale_path, "r", encoding="utf-8") as f:
@@ -224,7 +229,7 @@ class AskDialog(QDialog):
             fl_layout = QVBoxLayout(file_frame)
             fl_layout.setContentsMargins(12, 8, 12, 8)
 
-            file_label = QLabel(file_info)
+            file_label = QLabel(file_info.replace("\\n", "\n"))
             file_label.setObjectName("fileLabel")
             file_label.setWordWrap(True)
             file_label.setTextInteractionFlags(Qt.TextSelectableByMouse)

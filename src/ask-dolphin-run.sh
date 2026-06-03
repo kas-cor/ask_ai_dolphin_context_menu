@@ -29,9 +29,10 @@ case "${ASK_LOCALE:-}" in
 esac
 LOCALE="$DETECTED_LOCALE"
 
-# Load locale file (fallback to inline defaults)
+# Load locale file (check next to script or project root for source runs)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOCALE_FILE="$SCRIPT_DIR/locales/$LOCALE"
+[ -f "$LOCALE_FILE" ] || LOCALE_FILE="$(dirname "$SCRIPT_DIR")/locales/$LOCALE"
 [ -f "$LOCALE_FILE" ] && source "$LOCALE_FILE"
 
 # --- Localized strings (from locale file or inline defaults) ---
