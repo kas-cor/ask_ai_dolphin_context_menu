@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2](https://github.com/kas-cor/ask-ai-dolphin-context-menu/compare/ask-ai-dolphin-context-menu-v1.1.1...ask-ai-dolphin-context-menu-v1.1.2) (2026-06-03)
+
+
+### Bug Fixes
+
+* correct backslash escaping for newlines in file info ([6f548bf](https://github.com/kas-cor/ask-ai-dolphin-context-menu/commit/6f548bfa553a1bdbd0a5c55df425d4a44aee86e4))
+* remove duplicate "Selected files:" from dialog header subtitle ([790d7ff](https://github.com/kas-cor/ask-ai-dolphin-context-menu/commit/790d7ff5348271ef14806bcecf24546c25bf7924))
+* update ASK_MODEL to ASK_AI_MODEL in locale files ([ebaaab4](https://github.com/kas-cor/ask-ai-dolphin-context-menu/commit/ebaaab490094bcd458f4d28d83cd27c4bc6d4025))
+
 ## [1.1.1](https://github.com/kas-cor/ask-ai-dolphin-context-menu/compare/ask-ai-dolphin-context-menu-v1.1.0...ask-ai-dolphin-context-menu-v1.1.1) (2026-06-03)
 
 
