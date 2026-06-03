@@ -1,5 +1,9 @@
 #!/bin/bash
 # uninstall.sh — удаление Ask AI из контекстного меню Dolphin
+#
+# Использование:
+#   ./uninstall.sh                — из клонированного репозитория
+#   curl -s https://raw.githubusercontent.com/kas-cor/ask_ai_dolphin_context_menu/main/uninstall.sh | bash
 
 set -euo pipefail
 

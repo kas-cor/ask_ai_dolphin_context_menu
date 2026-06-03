@@ -30,7 +30,21 @@ yay -S glow-bin  # или sudo pacman -S glow, если есть в репози
 
 ## Установка
 
-### Вариант 1: git clone (рекомендуется)
+### Одной строкой (curl | bash)
+
+```bash
+curl -s https://raw.githubusercontent.com/kas-cor/ask_ai_dolphin_context_menu/main/install.sh | bash
+```
+
+Скрипт сам скачает проект из GitHub и выполнит установку. Ничего клонировать не нужно.
+
+### Удаление одной строкой
+
+```bash
+curl -s https://raw.githubusercontent.com/kas-cor/ask_ai_dolphin_context_menu/main/uninstall.sh | bash
+```
+
+### Локальная установка (git clone)
 
 ```bash
 git clone https://github.com/kas-cor/ask_ai_dolphin_context_menu.git
@@ -38,15 +52,7 @@ cd ask_ai_dolphin_context_menu
 ./install.sh
 ```
 
-### Вариант 2: curl + tar (без клонирования)
-
-```bash
-curl -sL https://github.com/kas-cor/ask_ai_dolphin_context_menu/archive/main.tar.gz | tar xz
-cd ask_ai_dolphin_context_menu-*
-./install.sh
-```
-
-После установки перезапустите Dolphin: **Ctrl+Shift+R**
+После установки (любым способом) перезапустите Dolphin: **Ctrl+Shift+R**
 
 ## Настройка
 
@@ -84,10 +90,15 @@ export ASK_MODEL="opencode/deepseek-v4-flash-free"
 В `~/.ask` можно добавить функции для быстрых запросов из терминала:
 
 ```bash
-# Пример — скопируйте из dot-ask/dot-ask.example
 source ~/.ask
 ask "Найди баги в этом коде"
 askr "Просто покажи ответ"
+```
+
+Пример `~/.ask` можно взять прямо из репозитория:
+
+```bash
+curl -s https://raw.githubusercontent.com/kas-cor/ask_ai_dolphin_context_menu/main/dot-ask/dot-ask.example > ~/.ask
 ```
 
 ## Использование
@@ -97,12 +108,6 @@ askr "Просто покажи ответ"
 3. Выберите пресет (сразу отправит запрос) или введите свой вопрос и нажмите **Отправить**
 4. Откроется Konsole — ответ стримится через `glow`
 5. Нажмите **Ctrl+C** или **Enter**, чтобы закрыть окно
-
-## Удаление
-
-```bash
-./uninstall.sh
-```
 
 ## Структура проекта
 
@@ -118,22 +123,10 @@ ask_ai_dolphin_context_menu/
 │   └── ask-dolphin.cfg.example # Пример конфига с пресетами
 ├── dot-ask/
 │   └── dot-ask.example         # Пример ~/.ask
-├── install.sh                  # Скрипт установки
-├── uninstall.sh                # Скрипт удаления
+├── install.sh                  # Скрипт установки (работает и через curl)
+├── uninstall.sh                # Скрипт удаления (работает и через curl)
 └── README.md                   # Этот файл
 ```
-
-## Публикация на GitHub
-
-```bash
-# 1. Создайте пустой репозиторий на github.com (без README, без .gitignore)
-# 2. Замените URL на свой и выполните:
-
-git remote add origin https://github.com/ваш-username/ask_ai_dolphin_context_menu.git
-git push -u origin main
-```
-
-После публикации обновите ссылку для клонирования в разделе **Установка**.
 
 ## Лицензия
 

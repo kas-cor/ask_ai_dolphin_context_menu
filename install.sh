@@ -1,11 +1,42 @@
 #!/bin/bash
 # install.sh — установка Ask AI в контекстное меню Dolphin
 #
+# Поддерживает два режима:
+#   1. Локальный: ./install.sh — из клонированного репозитория
+#   2. Одна строка: curl -s https://raw.githubusercontent.com/kas-cor/ask_ai_dolphin_context_menu/main/install.sh | bash
+#
 # Копирует скрипты в ~/.local/bin/
 # Устанавливает сервис-меню в ~/.local/share/kio/servicemenus/
 # Копирует пример конфига, если его ещё нет
 
 set -euo pipefail
+
+REPO="kas-cor/ask_ai_dolphin_context_menu"
+BRANCH="main"
+GITHUB_RAW="https://raw.githubusercontent.com/$REPO/$BRANCH"
+GITHUB_TAR="https://github.com/$REPO/archive/$BRANCH.tar.gz"
+
+# --- Определяем режим: локальный или curl pipe ---
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "")"
+
+if [ -z "$SCRIPT_DIR" ] || [ ! -f "$SCRIPT_DIR/src/ask-dolphin.sh" ]; then
+    # --- Режим curl pipe: скачиваем проект во временную папку ---
+    echo "📦 Downloading project from GitHub..."
+
+    if ! command -v curl &>/dev/null; then
+        echo "❌ curl is required. Install: sudo pacman -S curl"
+        exit 1
+    fi
+
+    TMP_DIR="$(mktemp -d)"
+    trap 'rm -rf "$TMP_DIR"' EXIT
+
+    curl -sfL "$GITHUB_TAR" | tar xz -C "$TMP_DIR" --strip-components=1
+
+    exec bash "$TMP_DIR/install.sh"
+fi
+
+# --- Локальный режим: используем файлы из репозитория ---
 
 # --- Проверка зависимостей ---
 echo "🔍 Checking dependencies..."
@@ -77,7 +108,8 @@ fi
 if [ ! -f "$HOME/.ask" ]; then
     echo ""
     echo "ℹ️  You don't have ~/.ask yet. You can use the example:"
-    echo "   cp $PROJECT_DIR/dot-ask/dot-ask.example ~/.ask"
+    echo "   source <(curl -s $GITHUB_RAW/dot-ask/dot-ask.example)"
+    echo "   Or copy from the config: cat $GITHUB_RAW/dot-ask/dot-ask.example > ~/.ask"
     echo "   Then add 'source ~/.ask' to your ~/.bashrc or ~/.zshrc"
 fi
 
