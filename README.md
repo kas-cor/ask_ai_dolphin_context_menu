@@ -180,12 +180,12 @@ cp locales/en_EN locales/de_DE
 # Edit locales/de_DE — translate everything after the =
 ```
 
-2. **Install locale detection** — add your locale to the case statement in all 3 scripts. Look for the existing `ru_RU*|ru_UA*|be_BY*|uk_UA*` pattern and add your own:
+2. **Install locale detection** — add your locale to the case statements in all 4 scripts. Look for the existing `ru_RU*|ru_UA*|be_BY*|uk_UA*` pattern and the `ASK_LOCALE` handling:
 
-   - `install.sh` — line `ru_RU*|ru_UA*|be_BY*|uk_UA*) DETECTED_LOCALE="ru_RU" ;:`
-   - `src/ask-dolphin.sh` — same pattern
-   - `src/ask-dolphin-run.sh` — same pattern
-   - `src/ask-dolphin-dialog.py` — in `detect_locale()` function
+   - `install.sh` — add to both: `ru_RU*|ru_UA*|be_BY*|uk_UA*) DETECTED_LOCALE="ru_RU" ;;` and the `ASK_LOCALE` case block
+   - `src/ask-dolphin.sh` — same two locations
+   - `src/ask-dolphin-run.sh` — same two locations
+   - `src/ask-dolphin-dialog.py` — in `detect_locale()` function (both `ASK_LOCALE` and `LANG` checks)
 
 3. **Create a preset config** (optional) — create `config/ask-dolphin.cfg.xx_XX.example` with translated preset queries
 

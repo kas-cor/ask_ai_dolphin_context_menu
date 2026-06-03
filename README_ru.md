@@ -181,12 +181,12 @@ cp locales/en_EN locales/de_DE
 # Отредактируйте locales/de_DE — переведите всё после =
 ```
 
-2. **Добавьте определение локали** — найдите в скриптах блоки с `ru_RU*|ru_UA*|be_BY*|uk_UA*` и добавьте свою локаль:
+2. **Добавьте определение локали** — найдите в скриптах блоки `ru_RU*|ru_UA*|be_BY*|uk_UA*` и блоки обработки `ASK_LOCALE`, добавьте свою локаль в оба места в каждом скрипте:
 
-   - `install.sh` — строка `ru_RU*|ru_UA*|be_BY*|uk_UA*) DETECTED_LOCALE="ru_RU" ;:`
-   - `src/ask-dolphin.sh` — аналогично
-   - `src/ask-dolphin-run.sh` — аналогично
-   - `src/ask-dolphin-dialog.py` — в функции `detect_locale()`
+   - `install.sh` — строка `ru_RU*|ru_UA*|be_BY*|uk_UA*) DETECTED_LOCALE="ru_RU" ;;` и блок `ASK_LOCALE`
+   - `src/ask-dolphin.sh` — два аналогичных места
+   - `src/ask-dolphin-run.sh` — два аналогичных места
+   - `src/ask-dolphin-dialog.py` — функция `detect_locale()` (проверки `ASK_LOCALE` и `LANG`)
 
 3. **Создайте конфиг с пресетами** (опционально) — создайте `config/ask-dolphin.cfg.xx_XX.example` с переведёнными пресетами
 
