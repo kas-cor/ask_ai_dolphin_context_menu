@@ -109,6 +109,13 @@ Examples:
 
 By default, the language is auto-detected from your system `$LANG`. See [Localization](#localization) for details.
 
+**Theme** — set via `ASK_THEME`:
+
+- `export ASK_THEME="dark"` — force dark theme for the PyQt5 dialog
+- `export ASK_THEME="light"` — force light theme
+
+By default, the theme is auto-detected from your system palette (KDE color scheme). Works for both the PyQt5 dialog and the Konsole runner header.
+
 ### `ask` / `askr` terminal functions
 
 The installer sets these up automatically. After reopening your terminal, use them directly:
