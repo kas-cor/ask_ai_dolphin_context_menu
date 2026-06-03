@@ -1,8 +1,17 @@
 > **🌐 Русская версия:** [README_ru.md](./README_ru.md)
 
+<div align="center">
+
 # 🤖 Ask AI — Dolphin Context Menu
 
+[![CI](https://github.com/kas-cor/ask-ai-dolphin-context-menu/actions/workflows/ci.yml/badge.svg)](https://github.com/kas-cor/ask-ai-dolphin-context-menu/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Release](https://img.shields.io/github/v/release/kas-cor/ask-ai-dolphin-context-menu)](https://github.com/kas-cor/ask-ai-dolphin-context-menu/releases)
+[![Platform](https://img.shields.io/badge/Platform-Linux--KDE-blue)](https://kde.org)
+
 Integrate an AI assistant into the **Dolphin** file manager context menu (KDE Plasma).
+
+</div>
 
 Select files/folders → right-click → **Ask AI** → choose a preset or type your query → get a formatted response in Konsole.
 
