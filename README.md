@@ -25,6 +25,43 @@ Select files/folders → right-click → **Ask AI** → choose a preset or type 
 - **No selection fallback** — if nothing is selected, the current directory is used as context
 - **PyQt5 dialog** — polished UI styled for KDE Breeze
 
+## Use Cases
+
+### For developers
+
+| Use case | Example query | How it works |
+|---|---|---|
+| **Code review** | `Find bugs in these files` | AI analyzes selected source files and lists issues |
+| **Generate docs** | `Generate documentation` | Creates Markdown docs from code |
+| **Write tests** | `Write tests for these files` | Outputs test code you can save |
+| **Refactoring** | `Refactor this code` | Suggests improvements with diffs |
+| **Security audit** | `Find security vulnerabilities` | Scans for OWASP-top issues |
+
+### For everyone (non-programmers)
+
+| Use case | Example query | How it works |
+|---|---|---|
+| **Summarize** | `Summarize this text and save to file` | AI reads the file and writes a summary to `ASK_AI_SAVE_DIR` |
+| **Explain** | `Explain this like I'm five` | Breaks down complex documents / configs |
+| **Translate** | `Translate this to English` | Translates text files in-place |
+| **Data to tables** | `Create a Markdown table from this data` | Converts raw CSV / lists into formatted tables |
+| **Image batch processing** | `Write a script to resize images to 1920x1080` | AI writes a bash script → **runner executes it automatically** |
+| **Collage / slideshow** | `Write a script to make a collage from these images` | AI generates ImageMagick / ffmpeg script and runs it |
+| **Crop to aspect ratio** | `Write a script to crop photos to 1:1` | Script runs immediately, results appear in the same folder |
+
+> **Script auto-execution:** if the AI response starts with `#!/bin/bash` (e.g., a script), the runner automatically saves it as `.sh`, makes it executable, and runs it. Informational responses (summaries, explanations) are displayed as-is.
+
+These are just examples — the only limit is your imagination. Any question you can ask an AI, any script it can write, any file you can point it at — it's all one right-click away.
+
+### Quick terminal usage
+
+After installation, use `ask` / `askr` from any terminal:
+
+```bash
+ask "Summarize this directory"
+askr "Raw output without glow"
+```
+
 ## Dependencies
 
 - **KDE Plasma** (Dolphin, Konsole)
@@ -93,6 +130,7 @@ nano ~/.ask_ai
 | Variable | Default | Description |
 |---|---|---|
 | `ASK_AI_MODEL` | `opencode/deepseek-v4-flash-free` | AI model for opencode. List: `opencode models` |
+| `ASK_AI_SAVE_DIR` | unset | Save AI responses to this directory (e.g., `~/ask-ai-results`). Creates `<query-slug>-<timestamp>.md` files |
 | `GLOW_DISABLED` | unset | Set to `1` for raw output without glow formatting (`askr`) |
 | `ASK_AI_LOCALE` | auto-detect (system `$LANG`) | Force UI language: `ru_RU` / `en_EN` |
 | `ASK_AI_THEME` | auto-detect (system palette) | Force UI theme: `dark` / `light` |

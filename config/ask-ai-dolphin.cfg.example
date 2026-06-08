@@ -3,11 +3,15 @@
 # Blank lines are also ignored.
 # Feel free to change, add, or remove lines.
 # Only the last 8 presets are shown in the dialog.
+#
+# Tip: set ASK_AI_SAVE_DIR=~/ask-ai-results in ~/.ask_ai
+# to automatically save responses to files.
 
 Describe these files
-Find bugs in these files
-Optimize this code
 Review code quality
 Generate documentation
-Refactor this code
 Write tests for these files
+Summarize this text and save to file
+Explain this like I'm five
+Create a Markdown table from this data
+Write a script to resize images to 1920x1080

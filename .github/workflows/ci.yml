@@ -42,3 +42,8 @@ jobs:
         run: |
           python3 .github/scripts/test-ask-theme.py
           echo "ASK_AI_THEME OK"
+
+      - name: Runner save & script execution test
+        run: |
+          bash .github/scripts/test-runner-save.sh
+          echo "Runner save OK"

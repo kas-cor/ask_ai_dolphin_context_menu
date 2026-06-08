@@ -40,6 +40,10 @@ runner_lbl_streaming="⏳ Streaming AI response..."
 runner_lbl_glow_missing="glow not found — output without formatting"
 runner_lbl_err_opencode="Error: opencode not found in PATH"
 runner_lbl_done="✅ Done. Press Ctrl+C or Enter to close."
+runner_lbl_saved="💾 Saved to:"
+runner_lbl_executing="▶️ Executing script..."
+runner_lbl_script_saved="📜 Script saved to:"
+runner_lbl_script_failed="⚠️ Script exited with an error"
 runner_fallback_query="Explain these files"
 
 # --- shell entry point (sh_) ---

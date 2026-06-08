@@ -44,6 +44,10 @@ LBL_STREAMING="${runner_lbl_streaming:-⏳ Streaming AI response...}"
 LBL_GLOW_MISSING="${runner_lbl_glow_missing:-glow not found -- output without formatting}"
 LBL_ERR_OPENCODE="${runner_lbl_err_opencode:-Error: opencode not found in PATH}"
 LBL_DONE="${runner_lbl_done:-✅ Done. Press Ctrl+C or Enter to close.}"
+LBL_SAVED="${runner_lbl_saved:-💾 Saved to:}"
+LBL_EXECUTING="${runner_lbl_executing:-▶️ Executing script...}"
+LBL_SCRIPT_SAVED="${runner_lbl_script_saved:-📜 Script saved to:}"
+LBL_SCRIPT_FAILED="${runner_lbl_script_failed:-⚠️ Script exited with an error}"
 FALLBACK_QUERY="${runner_fallback_query:-Explain these files}"
 
 # --- Defaults ---
@@ -129,21 +133,81 @@ MODEL="${ASK_AI_MODEL:-opencode/deepseek-v4-flash-free}"
 echo -e "${BOLD}${LBL_MODEL}${NC} ${FILE_CYAN}${MODEL}${NC}"
 echo ""
 
+# --- Prepare output file (if ASK_AI_SAVE_DIR is set) ---
+TEMP_OUTPUT=$(mktemp)
+trap 'rm -f "$TEMP_OUTPUT"' EXIT
+
+SAVE_FILE=""
+if [ -n "${ASK_AI_SAVE_DIR:-}" ]; then
+    mkdir -p "$ASK_AI_SAVE_DIR"
+    TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+    # Generate a short slug from the query for readability
+    QUERY_SLUG=$(echo "$QUERY" | python3 -c "
+import sys, re
+s = sys.stdin.read().strip().lower()
+s = re.sub(r'[^a-zа-я0-9 ]', '', s).strip().replace(' ', '_')[:40]
+print(s or 'result')
+" 2>/dev/null) || QUERY_SLUG=$(echo "$QUERY" | tr ' ' '_' | head -c 40)
+    [ -z "$QUERY_SLUG" ] && QUERY_SLUG="result"
+    SAVE_FILE="$ASK_AI_SAVE_DIR/${QUERY_SLUG}-${TIMESTAMP}.md"
+fi
+
 # --- Stream ---
 echo -e "${BOLD}${LBL_STREAMING}${NC}"
 echo ""
 
 if [ "${GLOW_DISABLED:-0}" = "1" ]; then
-    # Raw mode (askr)
-    opencode run --model "$MODEL" "$PROMPT"
+    # Raw mode (askr) — tee saves raw output
+    opencode run --model "$MODEL" "$PROMPT" | tee "$TEMP_OUTPUT"
 elif command -v glow &> /dev/null; then
-    opencode run --model "$MODEL" "$PROMPT" | glow -
+    # Tee captures raw output BEFORE glow adds ANSI codes
+    opencode run --model "$MODEL" "$PROMPT" | tee "$TEMP_OUTPUT" | glow -
 else
     echo -e "${LABEL_YELLOW}${LBL_GLOW_MISSING}${NC}"
-    opencode run --model "$MODEL" "$PROMPT"
+    opencode run --model "$MODEL" "$PROMPT" | tee "$TEMP_OUTPUT"
+fi
+
+# --- Save output to file if requested ---
+SCRIPT_FILE=""
+if [ -n "$SAVE_FILE" ]; then
+    cp "$TEMP_OUTPUT" "$SAVE_FILE"
+fi
+
+# --- Check if output is an executable script (starts with shebang) ---
+FIRST_LINE=$(head -1 "$TEMP_OUTPUT" 2>/dev/null || true)
+if [[ "$FIRST_LINE" == "#!"* ]]; then
+    # Determine where to save the script
+    if [ -n "$SAVE_FILE" ]; then
+        SCRIPT_FILE="${SAVE_FILE%.md}.sh"
+        cp "$TEMP_OUTPUT" "$SCRIPT_FILE"
+    else
+        # No SAVE_DIR — save next to first file or in current dir
+        SCRIPT_DIR="${FILES[0]:-$PWD}"
+        [ -f "$SCRIPT_DIR" ] && SCRIPT_DIR=$(dirname "$SCRIPT_DIR")
+        TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+        SCRIPT_FILE="$SCRIPT_DIR/ask-ai-script-$TIMESTAMP.sh"
+        cp "$TEMP_OUTPUT" "$SCRIPT_FILE"
+    fi
+    chmod +x "$SCRIPT_FILE"
+
+    echo ""
+    echo -e "${BOLD}${FILE_GREEN}${LBL_EXECUTING}${NC} ${FILE_CYAN}$SCRIPT_FILE${NC}"
+    echo ""
+    # Run from the directory of the first selected file (or current dir)
+    RUN_DIR="${FILES[0]:-$PWD}"
+    [ -f "$RUN_DIR" ] && RUN_DIR=$(dirname "$RUN_DIR")
+    cd "$RUN_DIR" 2>/dev/null || true
+    "$SCRIPT_FILE" 2>&1 || echo -e "${BOLD}${LABEL_YELLOW}${LBL_SCRIPT_FAILED}${NC}"
+    echo ""
 fi
 
 echo ""
 echo -e "${BOLD}${FILE_GREEN}${LBL_DONE}${NC}"
+if [ -n "$SAVE_FILE" ]; then
+    echo -e "${BOLD}${LABEL_YELLOW}${LBL_SAVED}${NC} ${FILE_CYAN}$SAVE_FILE${NC}"
+fi
+if [ -n "$SCRIPT_FILE" ]; then
+    echo -e "${BOLD}${LABEL_YELLOW}${LBL_SCRIPT_SAVED}${NC} ${FILE_CYAN}$SCRIPT_FILE${NC}"
+fi
 echo -n ""
 read -r 2>/dev/null || true

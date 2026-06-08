@@ -40,6 +40,10 @@ runner_lbl_streaming="⏳ Получение ответа AI..."
 runner_lbl_glow_missing="glow не найден — вывод без форматирования"
 runner_lbl_err_opencode="Ошибка: opencode не найден в PATH"
 runner_lbl_done="✅ Готово. Нажмите Ctrl+C или Enter чтобы закрыть."
+runner_lbl_saved="💾 Сохранён в:"
+runner_lbl_executing="▶️ Выполняю скрипт..."
+runner_lbl_script_saved="📜 Скрипт сохранён в:"
+runner_lbl_script_failed="⚠️ Скрипт завершился с ошибкой"
 runner_fallback_query="Опиши эти файлы"
 
 # --- shell entry point (sh_) ---
